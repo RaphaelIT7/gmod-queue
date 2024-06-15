@@ -15,7 +15,7 @@ Detouring::Hook detour_CBaseClient_SetSignonState;
 //Detouring::Hook detour_CBaseServer_SendPendingServerInfo;
 Detouring::Hook detour_CServerGameClients_GetPlayerLimit;
 
-void SetSignOnState(IClient* cl, int state, int spawncount)
+void Detours::Function::SetSignOnState(IClient* cl, int state, int spawncount)
 {
 	detour_CBaseClient_SetSignonState.GetTrampoline<CBaseClient_SetSignonState>()(cl, state, spawncount);
 }
@@ -44,13 +44,13 @@ void hook_CServerGameClients_GetPlayerLimit(void* funkyClass, int& minPlayers, i
 	defaultMaxPlayers = 255;
 }
 
-void Detours_Think()
+void Detours::Think()
 {
 }
 
 bool pre = false;
 std::vector<Detouring::Hook*> detours = {};
-void CreateDetour(Detouring::Hook* hook, const char* name, Detouring::Hook::Target target, void* func)
+void Detours::CreateDetour(Detouring::Hook* hook, const char* name, Detouring::Hook::Target target, void* func)
 {
 	hook->Create(target, func);
 	hook->Enable();
@@ -67,7 +67,7 @@ void CreateDetour(Detouring::Hook* hook, const char* name, Detouring::Hook::Targ
 }
 
 SymbolFinder symfinder;
-void Detours_Init()
+void Detours::Init()
 {
 	Msg("	--- Starting Detours ---\n");
 
@@ -92,7 +92,7 @@ void Detours_Init()
 	Msg("	--- Finished loading functions ---\n");
 }
 
-void Detours_Shutdown()
+void Detours::Shutdown()
 {
 	for (Detouring::Hook* hook : detours) {
 		hook->Disable();

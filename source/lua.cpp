@@ -5,7 +5,7 @@
 #include "filesystem.h"
 
 IServer* Server;
-bool OnSetSignonState(int userID, int state, int spawncount) // Return true to block it. You would need to block SIGNONSTATE_PRESPAWN to block it from spawning the player.
+bool Lua::Hooks::OnSetSignonState(int userID, int state, int spawncount) // Return true to block it. You would need to block SIGNONSTATE_PRESPAWN to block it from spawning the player.
 {
 	if (Lua::PushHook("PlayerQueue:OnSetSignonState"))
 	{
