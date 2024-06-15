@@ -5,10 +5,8 @@
 #include <detouring/hook.hpp>
 #include <scanning/symbolfinder.hpp>
 #include <vector>
-#include <server.h>
+#include <iserver.h>
 #define PL_DEBUG 1
-
-extern CGameServer* gsv;
 
 //---------------------------------------------------------------------------------
 // Purpose: Base Detours
@@ -48,9 +46,3 @@ void CheckFunction(T func, const char* name)
 	}
 #endif
 }
-
-#ifdef PL_DEBUG
-#define DPrint Msg;
-#else
-#define DPrint {}
-#endif

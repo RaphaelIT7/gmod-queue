@@ -3,6 +3,7 @@
 #include <GarrysMod/InterfacePointers.hpp>
 #include <unordered_map>
 #include <vprof.h>
+#include "iclient.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -14,9 +15,9 @@ Detouring::Hook detour_CBaseClient_SetSignonState;
 //Detouring::Hook detour_CBaseServer_SendPendingServerInfo;
 Detouring::Hook detour_CServerGameClients_GetPlayerLimit;
 
-bool hook_CBaseClient_SetSignonState(CGameClient* cl, int state, int spawncount)
+bool hook_CBaseClient_SetSignonState(IClient* cl, int state, int spawncount)
 {
-	if (Lua::Hooks::OnSetSignonState(cl->m_UserID, state, spawncount))
+	if (Lua::Hooks::OnSetSignonState(cl->GetUserID(), state, spawncount))
 		return true;
 
 	return detour_CBaseClient_SetSignonState.GetTrampoline<CBaseClient_SetSignonState>()(cl, state, spawncount);
