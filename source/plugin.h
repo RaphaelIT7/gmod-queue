@@ -43,10 +43,12 @@ public:
 	virtual void			OnQueryCvarValueFinished(QueryCvarCookie_t iCookie, edict_t* pPlayerEntity, EQueryCvarValueStatus eStatus, const char* pCvarName, const char* pCvarValue);
 	virtual void			OnEdictAllocated(edict_t* edict);
 	virtual void			OnEdictFreed(const edict_t* edict);
-	virtual bool			LuaInit();
-	virtual void			LuaShutdown();
 
 	virtual int GetCommandIndex() { return m_iClientCommandIndex; }
+public:
+	bool			LuaInit();
+	void			LuaShutdown();
+
 private:
 	int m_iClientCommandIndex;
 	GarrysMod::Lua::ILuaInterface* LUA;
