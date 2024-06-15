@@ -120,9 +120,6 @@ void CServerPlugin::ServerActivate(edict_t *pEdictList, int edictCount, int clie
 	}
 
 	Lua::ServerInit();
-
-	ConVarRef sv_parallel_packentities("sv_parallel_packentities");
-	sv_parallel_packentities.SetValue(false);
 }
 
 //---------------------------------------------------------------------------------

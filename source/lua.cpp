@@ -71,6 +71,7 @@ void Lua::Init(GarrysMod::Lua::ILuaBase* LUA)
 	Start_Table();
 		Add_Func(SetSignOnState, "SetSignOnState");
 	Finish_Table("PlayerQueue");
+	Msg("Pushed PlayerQueue\n");
 }
 
 void Lua::ServerInit()
@@ -82,7 +83,8 @@ void Lua::ServerInit()
 	if (PushHook("PlayerQueue:Initialize"))
 	{
 		g_Lua->CallFunctionProtected(0, 0, true);
-	}
+		Msg("Init PlayerQueue\n");
+	} else { Msg("failed PlayerQueue\n"); }
 }
 
 void Lua::Shutdown()
