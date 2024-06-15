@@ -12,6 +12,7 @@
 
 Detouring::Hook detour_CBaseClient_SetSignonState;
 //Detouring::Hook detour_CBaseServer_SendPendingServerInfo;
+Detouring::Hook detour_CServerGameClients_GetPlayerLimit;
 
 bool hook_CBaseClient_SetSignonState(CGameClient* cl, int state, int spawncount)
 {
@@ -29,6 +30,13 @@ void hook_CBaseServer_SendPendingServerInfo(IServer* srv)
 
 	detour_CBaseServer_SendPendingServerInfo.GetTrampoline<CBaseServer_SendPendingServerInfo>()(srv);
 }*/
+
+void hook_CServerGameClients_GetPlayerLimit(void* funkyClass, int& minPlayers, int& maxPlayers, int& defaultMaxPlayers)
+{
+	minPlayers = 1;
+	maxPlayers = 255;
+	defaultMaxPlayers = 255;
+}
 
 void Detours_Think()
 {
@@ -65,6 +73,10 @@ void Detours_Init()
 	//void* sv_CBaseServer_SendPendingServerInfo = symfinder.Resolve(engine_loader.GetModule(), CBaseServer_SendPendingServerInfoSym.name.c_str(), CBaseServer_SendPendingServerInfoSym.length);
 	//CheckFunction(sv_CBaseServer_SendPendingServerInfo, "CBaseServer::SendPendingServerInfo");
 	//CreateDetour(&detour_CBaseServer_SendPendingServerInfo, "CBaseServer::SendPendingServerInfo", reinterpret_cast<void*>(sv_CBaseServer_SendPendingServerInfo), reinterpret_cast<void*>(&hook_CBaseServer_SendPendingServerInfo));
+
+	void* sv_CServerGameClients_GetPlayerLimit = symfinder.Resolve(engine_loader.GetModule(), CServerGameClients_GetPlayerLimitSym.name.c_str(), CServerGameClients_GetPlayerLimitSym.length);
+	CheckFunction(sv_CServerGameClients_GetPlayerLimit, "CServerGameClients::GetPlayerLimit");
+	CreateDetour(&detour_CServerGameClients_GetPlayerLimit, "CServerGameClients::GetPlayerLimit", reinterpret_cast<void*>(sv_CServerGameClients_GetPlayerLimit), reinterpret_cast<void*>(&hook_CServerGameClients_GetPlayerLimit));
 
 	Msg("	--- Finished Detours ---\n");
 
