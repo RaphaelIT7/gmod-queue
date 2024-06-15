@@ -80,7 +80,7 @@ void Detours::Init()
 	//CheckFunction(sv_CBaseServer_SendPendingServerInfo, "CBaseServer::SendPendingServerInfo");
 	//CreateDetour(&detour_CBaseServer_SendPendingServerInfo, "CBaseServer::SendPendingServerInfo", reinterpret_cast<void*>(sv_CBaseServer_SendPendingServerInfo), reinterpret_cast<void*>(&hook_CBaseServer_SendPendingServerInfo));
 
-	SourceSDK::ModuleLoader server_loader("server");
+	SourceSDK::ModuleLoader server_loader("server_srv");
 	void* sv_CServerGameClients_GetPlayerLimit = symfinder.Resolve(server_loader.GetModule(), CServerGameClients_GetPlayerLimitSym.name.c_str(), CServerGameClients_GetPlayerLimitSym.length);
 	CheckFunction(sv_CServerGameClients_GetPlayerLimit, "CServerGameClients::GetPlayerLimit");
 	CreateDetour(&detour_CServerGameClients_GetPlayerLimit, "CServerGameClients::GetPlayerLimit", reinterpret_cast<void*>(sv_CServerGameClients_GetPlayerLimit), reinterpret_cast<void*>(&hook_CServerGameClients_GetPlayerLimit));
