@@ -24,7 +24,14 @@ bool OnSetSignonState(int userID, int state, int spawncount) // Return true to b
 
 LUA_FUNCTION_STATIC(SetSignOnState)
 {
-	// ToDo
+	int userID = LUA->CheckNumber(1);
+	int state = LUA->CheckNumber(2);
+	CGameClient* cl = (CGameClient*)Server->GetClient(userID);
+	if ( cl != NULL )
+	{
+		cl->SetSignonState(state, -1); // It could crash :/ Had a solution for it somewhere. I think it was in the HttpServer repo in the receive whitelist
+	}
+
 	return 0;
 }
 
