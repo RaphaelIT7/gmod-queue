@@ -1,6 +1,5 @@
 #include <GarrysMod/Lua/LuaInterface.h>
 #include <GarrysMod/FactoryLoader.hpp>
-#include "sv_client.h"
 #include "lua.h"
 #include <GarrysMod/InterfacePointers.hpp>
 #include "filesystem.h"
@@ -26,10 +25,10 @@ LUA_FUNCTION_STATIC(SetSignOnState)
 {
 	int userID = LUA->CheckNumber(1);
 	int state = LUA->CheckNumber(2);
-	CGameClient* cl = (CGameClient*)Server->GetClient(userID);
+	IClient* cl = (IClient*)Server->GetClient(userID);
 	if ( cl != NULL )
 	{
-		cl->SetSignonState(state, -1); // It could crash :/ Had a solution for it somewhere. I think it was in the HttpServer repo in the receive whitelist
+		Detours::Function::SetSignOnState(cl, state, -1); // It could crash :/ Had a solution for it somewhere. I think it was in the HttpServer repo in the receive whitelist
 	}
 
 	return 0;

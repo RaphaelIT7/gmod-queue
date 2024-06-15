@@ -15,6 +15,11 @@ Detouring::Hook detour_CBaseClient_SetSignonState;
 //Detouring::Hook detour_CBaseServer_SendPendingServerInfo;
 Detouring::Hook detour_CServerGameClients_GetPlayerLimit;
 
+void SetSignOnState(IClient* cl, int state, int spawncount)
+{
+	detour_CBaseClient_SetSignonState.GetTrampoline<CBaseClient_SetSignonState>()(cl, state, spawncount);
+}
+
 bool hook_CBaseClient_SetSignonState(IClient* cl, int state, int spawncount)
 {
 	if (Lua::Hooks::OnSetSignonState(cl->GetUserID(), state, spawncount))

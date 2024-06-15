@@ -29,6 +29,11 @@ const Symbol CServerGameClients_GetPlayerLimitSym = Symbol::FromName("_ZNK18CSer
 
 namespace Detours
 {
+	namespace Function
+	{
+		extern void SetSignOnState(IClient* cl, int state, int spawncount);
+	}
+
 	extern void Init();
 	extern void Shutdown();
 	extern void Think();
