@@ -20,7 +20,7 @@ const Symbol CBaseClient_SetSignonStateSym = Symbol::FromName("_ZN11CBaseClient1
 typedef void (*CBaseServer_SendPendingServerInfo)(void* srv);
 const Symbol CBaseServer_SendPendingServerInfoSym = Symbol::FromName("_ZN11CBaseServer21SendPendingServerInfoEv");
 
-typedef bool (*CServerGameClients_GetPlayerLimit)(void* dll, int& minplayers, int& mayplayers, int& defaultmaxplayers);
+typedef void (*CServerGameClients_GetPlayerLimit)(void* dll, int& minplayers, int& mayplayers, int& defaultmaxplayers);
 const Symbol CServerGameClients_GetPlayerLimitSym = Symbol::FromName("_ZNK18CServerGameClients15GetPlayerLimitsERiS0_S0_");
 
 //---------------------------------------------------------------------------------
