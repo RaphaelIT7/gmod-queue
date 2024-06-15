@@ -5,7 +5,6 @@
 #include "detours.h"
 #include "eiface.h"
 #include <GarrysMod/FactoryLoader.hpp>
-#include "sv_main.h"
 #include <tier3/tier3.h>
 
 using namespace GarrysMod::Lua;
