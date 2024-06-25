@@ -23,15 +23,21 @@ bool Lua::Hooks::OnSetSignonState(int userID, int state, int spawncount) // Retu
 
 LUA_FUNCTION_STATIC(SetSignOnState)
 {
-	int userID = LUA->CheckNumber(1);
+	int playerIndex = LUA->CheckNumber(1);
 	int state = LUA->CheckNumber(2);
-	IClient* cl = (IClient*)Server->GetClient(userID);
-	if ( cl != NULL )
-	{
-		Detours::Function::SetSignOnState(cl, state, -1); // It could crash :/ Had a solution for it somewhere. I think it was in the HttpServer repo in the receive whitelist
+	INetChannelInfo* channel = engine->GetPlayerNetInfo(playerIndex);
+	if ( channel != nullptr ) { // We skip bots and empty slots with this.
+		IClient* cl = (IClient*)Server->GetClient(playerIndex);
+		if (cl != NULL)
+		{
+			Detours::Function::SetSignOnState(cl, state, -1);
+			LUA->PushBool(true);
+			return 1;
+		}
 	}
 
-	return 0;
+	LUA->PushBool(false);
+	return 1;
 }
 
 bool Lua::PushHook(const char* hook)
