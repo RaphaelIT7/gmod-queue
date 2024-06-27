@@ -4,6 +4,7 @@
 #include <GarrysMod/InterfacePointers.hpp>
 #include "filesystem.h"
 #include "unordered_map"
+#include "iclient.h"
 
 IServer* Server;
 int iSlot = 0;
