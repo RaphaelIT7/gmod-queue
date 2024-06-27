@@ -18,6 +18,17 @@ void FreeID(int playerSlot)
 	}
 }
 
+IClient* GetClient(int playerSlot)
+{
+	auto it = pClients.find(playerSlot);
+	if ( it == pClients.end() )
+	{
+		return NULL;
+	} else {
+		return it->second;
+	}
+}
+
 bool Lua::Hooks::OnSetSignonState(IClient* cl, int state, int spawncount) // Return true to block it. You would need to block SIGNONSTATE_PRESPAWN to block it from spawning the player.
 {
 	if (Lua::PushHook("PlayerQueue:OnSetSignonState"))
@@ -50,15 +61,14 @@ LUA_FUNCTION_STATIC(SetSignOnState)
 {
 	int playerSlot = LUA->CheckNumber(1);
 	int state = LUA->CheckNumber(2);
-
-	auto it = pClients.find(playerSlot);
-	if ( it == pClients.end() )
+	IClient* cl = GetClient(playerSlot);
+	if ( cl )
 	{
-		LUA->PushBool(false);
-	} else {
-		Detours::Function::SetSignOnState(it->second, state, -1);
-		FreeID(it->first);
+		Detours::Function::SetSignOnState(cl, state, -1);
+		FreeID(playerSlot);
 		LUA->PushBool(true);
+	} else {
+		LUA->PushBool(false);
 	}
 
 	return 1;
@@ -92,12 +102,28 @@ bool Lua::PushHook(const char* hook)
 	return true;
 }
 
-void Lua::Init(GarrysMod::Lua::ILuaBase* LUA)
+LUA_FUNCTION_STATIC(GetSteamID64)
+{
+	int playerSlot = LUA->CheckNumber(1);
+	IClient* cl = GetClient(playerSlot);
+	if ( cl )
+	{
+		const USERID_t info = cl->GetNetworkID();
+		LUA->PushNumber(info.steamid.ConvertToUint64()); // ToDo: Make a function that returns the SteamID and not SteamID64
+	} else {
+		LUA->PushNil();
+	}
+
+	return 1;
+}
+
+void Lua::Init(GarrysMod::Lua::ILuaBase* LUA) // ToDo: Test what happens if the client disconnects and add handling for it.
 {
 	g_Lua = (GarrysMod::Lua::ILuaInterface*)LUA;
 
 	Start_Table();
 		Add_Func(SetSignOnState, "SetSignOnState"); // NOTE: After calling this, the ID the hook gave you cannot be used again!
+		Add_Func(GetSteamID64, "GetSteamID64");
 	Finish_Table("PlayerQueue");
 	Msg("Pushed PlayerQueue\n");
 }
