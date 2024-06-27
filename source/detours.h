@@ -23,6 +23,9 @@ const Symbol CBaseServer_SendPendingServerInfoSym = Symbol::FromName("_ZN11CBase
 typedef void (*CServerGameClients_GetPlayerLimit)(void* dll, int& minplayers, int& mayplayers, int& defaultmaxplayers);
 const Symbol CServerGameClients_GetPlayerLimitSym = Symbol::FromName("_ZNK18CServerGameClients15GetPlayerLimitsERiS0_S0_");
 
+typedef void (*CBaseServer_FillServerInfo)(void* srv, SVC_ServerInfo& info);
+const Symbol CBaseServer_FillServerInfoSym = Symbol::FromName("_ZN11CBaseServer14FillServerInfoER14SVC_ServerInfo");
+
 //---------------------------------------------------------------------------------
 // Purpose: Expose/Create everything else
 //---------------------------------------------------------------------------------
