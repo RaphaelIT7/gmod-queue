@@ -12,7 +12,7 @@ bool Lua::Hooks::OnSetSignonState(int userID, int state, int spawncount) // Retu
 		g_Lua->PushNumber(userID);
 		g_Lua->PushNumber(state);
 		g_Lua->PushNumber(spawncount);
-		if (g_Lua->CallFunctionProtected(3, 1, true)) // Arg1 = Arguments, Arg2 = Returns, Arg3 = Show Error
+		if (g_Lua->CallFunctionProtected(4, 1, true)) // Arg1 = Arguments, Arg2 = Returns, Arg3 = Show Error
 		{
 			bool ret = false;
 			if ( g_Lua->GetType(-1) != GarrysMod::Lua::Type::Nil )
