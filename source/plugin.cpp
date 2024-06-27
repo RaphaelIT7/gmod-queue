@@ -88,7 +88,6 @@ void CServerPlugin::LevelInit(char const *pMapName)
 //---------------------------------------------------------------------------------
 bool CServerPlugin::LuaInit()
 {
-#ifndef SYSTEM_LINUX
 	LUA = Lua::GetRealm(GarrysMod::Lua::State::SERVER);
 	if (LUA == nullptr) {
 		Msg("Failed to initialize Server\n");
@@ -96,7 +95,6 @@ bool CServerPlugin::LuaInit()
 	}
 
 	Lua::Init(LUA);
-#endif
 
 	return true;
 }

@@ -82,7 +82,7 @@ void Lua::Init(GarrysMod::Lua::ILuaBase* LUA)
 
 void Lua::ServerInit()
 {
-	if (g_Lua == nullptr) { Msg("Lua is Null?"); return; }
+	if (g_Lua == nullptr) { Msg("Lua is Null?\n"); return; }
 
 	Server = InterfacePointers::Server();
 
