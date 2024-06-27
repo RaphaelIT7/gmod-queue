@@ -3,13 +3,19 @@
 #include "lua.h"
 #include <GarrysMod/InterfacePointers.hpp>
 #include "filesystem.h"
+#include "unordered_map"
 
 IServer* Server;
-bool Lua::Hooks::OnSetSignonState(int userID, int state, int spawncount) // Return true to block it. You would need to block SIGNONSTATE_PRESPAWN to block it from spawning the player.
+int iSlot = 0;
+std::unordered_map<int, IClient*> pClients;
+bool Lua::Hooks::OnSetSignonState(IClient* cl, int state, int spawncount) // Return true to block it. You would need to block SIGNONSTATE_PRESPAWN to block it from spawning the player.
 {
 	if (Lua::PushHook("PlayerQueue:OnSetSignonState"))
 	{
-		g_Lua->PushNumber(userID);
+		++iSlot;
+		pClients[iSlot] = cl;
+
+		g_Lua->PushNumber(iSlot);
 		g_Lua->PushNumber(state);
 		g_Lua->PushNumber(spawncount);
 		if (g_Lua->CallFunctionProtected(4, 1, true)) // Arg1 = Arguments, Arg2 = Returns, Arg3 = Show Error
@@ -29,20 +35,18 @@ bool Lua::Hooks::OnSetSignonState(int userID, int state, int spawncount) // Retu
 
 LUA_FUNCTION_STATIC(SetSignOnState)
 {
-	int playerIndex = LUA->CheckNumber(1);
+	int playerSlot = LUA->CheckNumber(1);
 	int state = LUA->CheckNumber(2);
-	INetChannelInfo* channel = engine->GetPlayerNetInfo(playerIndex);
-	if ( channel != nullptr ) { // We skip bots and empty slots with this.
-		IClient* cl = (IClient*)Server->GetClient(playerIndex);
-		if (cl != NULL)
-		{
-			Detours::Function::SetSignOnState(cl, state, -1);
-			LUA->PushBool(true);
-			return 1;
-		}
+
+	auto& it = pClients.find(playerSlot);
+	if ( it == pClients.end() )
+	{
+		LUA->PushBool(false);
+	} else {
+		Detours::Function::SetSignOnState(it->second, state, -1);
+		LUA->PushBool(true);
 	}
 
-	LUA->PushBool(false);
 	return 1;
 }
 

@@ -24,7 +24,7 @@ bool Detours::Function::SetSignOnState(IClient* cl, int state, int spawncount)
 
 bool hook_CBaseClient_SetSignonState(IClient* cl, int state, int spawncount)
 {
-	if (Lua::Hooks::OnSetSignonState(cl->GetPlayerSlot(), state, spawncount))
+	if (Lua::Hooks::OnSetSignonState(cl, state, spawncount))
 		return false;
 
 	return detour_CBaseClient_SetSignonState.GetTrampoline<CBaseClient_SetSignonState>()(cl, state, spawncount);

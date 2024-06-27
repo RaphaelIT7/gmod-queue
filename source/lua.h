@@ -5,7 +5,7 @@
 
 namespace Lua {
 	namespace Hooks {
-		extern bool OnSetSignonState(int userID, int state, int spawncount);
+		extern bool OnSetSignonState(IClient* cl, int state, int spawncount);
 	}
 
 	extern bool PushHook(const char* pName);
