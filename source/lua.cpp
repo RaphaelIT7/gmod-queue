@@ -9,6 +9,15 @@
 IServer* Server;
 int iSlot = 0;
 std::unordered_map<int, IClient*> pClients;
+void FreeID(int playerSlot)
+{
+	auto it = pClients.find(playerSlot);
+	if ( it != pClients.end() )
+	{
+		pClients.erase(playerSlot);
+	}
+}
+
 bool Lua::Hooks::OnSetSignonState(IClient* cl, int state, int spawncount) // Return true to block it. You would need to block SIGNONSTATE_PRESPAWN to block it from spawning the player.
 {
 	if (Lua::PushHook("PlayerQueue:OnSetSignonState"))
@@ -24,6 +33,9 @@ bool Lua::Hooks::OnSetSignonState(IClient* cl, int state, int spawncount) // Ret
 			bool ret = false;
 			if ( g_Lua->GetType(-1) != GarrysMod::Lua::Type::Nil )
 				ret = g_Lua->GetBool(-1);
+
+			if ( !ret )
+				FreeID( iSlot );
 
 			g_Lua->Pop(1);
 
@@ -45,6 +57,7 @@ LUA_FUNCTION_STATIC(SetSignOnState)
 		LUA->PushBool(false);
 	} else {
 		Detours::Function::SetSignOnState(it->second, state, -1);
+		FreeID(it->first);
 		LUA->PushBool(true);
 	}
 
@@ -79,13 +92,12 @@ bool Lua::PushHook(const char* hook)
 	return true;
 }
 
-
 void Lua::Init(GarrysMod::Lua::ILuaBase* LUA)
 {
 	g_Lua = (GarrysMod::Lua::ILuaInterface*)LUA;
 
 	Start_Table();
-		Add_Func(SetSignOnState, "SetSignOnState");
+		Add_Func(SetSignOnState, "SetSignOnState"); // NOTE: After calling this, the ID the hook gave you cannot be used again!
 	Finish_Table("PlayerQueue");
 	Msg("Pushed PlayerQueue\n");
 }
