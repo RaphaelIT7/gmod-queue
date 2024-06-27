@@ -38,6 +38,8 @@ bool CServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn g
 	ConnectTier2Libraries(&interfaceFactory, 1);
 	ConnectTier3Libraries(&interfaceFactory, 1);
 
+	engine = (IVEngineServer*)(&interfaceFactory)[0]( INTERFACEVERSION_VENGINESERVER, NULL );
+
 	Detours::Init();
 
 	Msg("--- Queue Plugin finished loading ---\n");
