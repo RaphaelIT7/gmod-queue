@@ -9,9 +9,15 @@ bool Lua::Hooks::OnSetSignonState(int userID, int state, int spawncount) // Retu
 {
 	if (Lua::PushHook("PlayerQueue:OnSetSignonState"))
 	{
-		if (g_Lua->CallFunctionProtected(0, 1, true)) // Arg1 = Arguments, Arg2 = Returns, Arg3 = Show Error
+		g_Lua->PushNumber(userID);
+		g_Lua->PushNumber(state);
+		g_Lua->PushNumber(spawncount);
+		if (g_Lua->CallFunctionProtected(3, 1, true)) // Arg1 = Arguments, Arg2 = Returns, Arg3 = Show Error
 		{
-			bool ret = g_Lua->GetBool(-1);
+			bool ret = false;
+			if ( g_Lua->GetType(-1) != GarrysMod::Lua::Type::Nil )
+				ret = g_Lua->GetBool(-1);
+
 			g_Lua->Pop(1);
 
 			return ret;
