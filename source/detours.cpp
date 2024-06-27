@@ -17,15 +17,15 @@ Detouring::Hook detour_CBaseClient_SetSignonState;
 Detouring::Hook detour_CServerGameClients_GetPlayerLimit;
 Detouring::Hook detour_CBaseServer_FillServerInfo;
 
-void Detours::Function::SetSignOnState(IClient* cl, int state, int spawncount)
+bool Detours::Function::SetSignOnState(IClient* cl, int state, int spawncount)
 {
-	detour_CBaseClient_SetSignonState.GetTrampoline<CBaseClient_SetSignonState>()(cl, state, spawncount);
+	return detour_CBaseClient_SetSignonState.GetTrampoline<CBaseClient_SetSignonState>()(cl, state, spawncount);
 }
 
 bool hook_CBaseClient_SetSignonState(IClient* cl, int state, int spawncount)
 {
 	if (Lua::Hooks::OnSetSignonState(cl->GetPlayerSlot(), state, spawncount))
-		return true;
+		return false;
 
 	return detour_CBaseClient_SetSignonState.GetTrampoline<CBaseClient_SetSignonState>()(cl, state, spawncount);
 }
@@ -42,7 +42,7 @@ void hook_CBaseServer_SendPendingServerInfo(IServer* srv)
 void hook_CServerGameClients_GetPlayerLimit(void* funkyClass, int& minPlayers, int& maxPlayers, int& defaultMaxPlayers)
 {
 	minPlayers = 1;
-	maxPlayers = 255;
+	maxPlayers = 255; // Allows one to go up to 255 slots.
 	defaultMaxPlayers = 255;
 }
 
@@ -50,7 +50,7 @@ void hook_CBaseServer_FillServerInfo(void* srv, SVC_ServerInfo& info)
 {
 	detour_CBaseServer_FillServerInfo.GetTrampoline<CBaseServer_FillServerInfo>()(srv, info);
 	if ( info.m_nMaxClients > 128 )
-		info.m_nMaxClients = 128; // Anything above will crash a client on join.
+		info.m_nMaxClients = 128; // Fixes a crash when joining a server which has more than 128 slots / is over MAX_PLAYERS
 }
 
 void Detours::Think()

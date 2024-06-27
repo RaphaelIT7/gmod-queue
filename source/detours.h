@@ -34,7 +34,7 @@ namespace Detours
 {
 	namespace Function
 	{
-		extern void SetSignOnState(IClient* cl, int state, int spawncount);
+		extern bool SetSignOnState(IClient* cl, int state, int spawncount);
 	}
 
 	extern void Init();
