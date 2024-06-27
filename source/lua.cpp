@@ -62,9 +62,8 @@ bool Lua::PushHook(const char* hook)
 				g_Lua->Pop(2);
 				g_Lua->ReferencePush(reference);
 				g_Lua->ReferenceFree(reference);
+				g_Lua->PushString(hook);
 			}
-
-			g_Lua->PushString(hook);
 
 	return true;
 }
@@ -88,7 +87,7 @@ void Lua::ServerInit()
 
 	if (PushHook("PlayerQueue:Initialize"))
 	{
-		g_Lua->CallFunctionProtected(0, 0, true);
+		g_Lua->CallFunctionProtected(1, 0, true);
 		Msg("Init PlayerQueue\n");
 	} else { Msg("failed PlayerQueue\n"); }
 }
