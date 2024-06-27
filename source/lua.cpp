@@ -39,7 +39,7 @@ LUA_FUNCTION_STATIC(SetSignOnState)
 	int playerSlot = LUA->CheckNumber(1);
 	int state = LUA->CheckNumber(2);
 
-	auto& it = pClients.find(playerSlot);
+	auto it = pClients.find(playerSlot);
 	if ( it == pClients.end() )
 	{
 		LUA->PushBool(false);
