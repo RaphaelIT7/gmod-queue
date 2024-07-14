@@ -110,7 +110,7 @@ LUA_FUNCTION_STATIC(GetSteamID64)
 	if ( cl )
 	{
 		const USERID_t info = cl->GetNetworkID();
-		LUA->PushString(std::to_string(info.steamid.ConvertToUint64()).c_str()); // ToDo: Make a function that returns the 
+		LUA->PushString((const char*)info.steamid.ConvertToUint64()); // ToDo: Make a function that returns the 
 	} else {
 		LUA->PushNil();
 	}
