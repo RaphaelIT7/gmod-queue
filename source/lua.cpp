@@ -103,13 +103,13 @@ bool Lua::PushHook(const char* hook)
 	return true;
 }
 
-LUA_FUNCTION_STATIC(GetSteamID64)
+LUA_FUNCTION_STATIC(GetSteamID)
 {
 	int playerSlot = LUA->CheckNumber(1);
 	IClient* cl = GetClient(playerSlot);
 	if ( cl )
 	{
-		LUA->PushString(Detours::Function::GetNetworkIDString(cl)); // ToDo: Make a function that returns the steamid
+		LUA->PushString(Detours::Function::GetNetworkIDString(cl));
 	} else {
 		LUA->PushNil();
 	}
@@ -123,7 +123,7 @@ void Lua::Init(GarrysMod::Lua::ILuaBase* LUA) // ToDo: Test what happens if the 
 
 	Start_Table();
 		Add_Func(SetSignOnState, "SetSignOnState"); // NOTE: After calling this, the ID the hook gave you cannot be used again!
-		Add_Func(GetSteamID64, "GetSteamID64");
+		Add_Func(GetSteamID, "GetSteamID");
 	Finish_Table("PlayerQueue");
 	Msg("Pushed PlayerQueue\n");
 }
