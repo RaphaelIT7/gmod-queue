@@ -109,8 +109,7 @@ LUA_FUNCTION_STATIC(GetSteamID64)
 	IClient* cl = GetClient(playerSlot);
 	if ( cl )
 	{
-		const USERID_t info = cl->GetNetworkID();
-		LUA->PushString((const char*)info.steamid.ConvertToUint64()); // ToDo: Make a function that returns the 
+		LUA->PushString(cl->GetNetworkIDString()); // ToDo: Make a function that returns the steamid
 	} else {
 		LUA->PushNil();
 	}
