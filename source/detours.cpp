@@ -25,7 +25,7 @@ bool Detours::Function::SetSignOnState(IClient* cl, int state, int spawncount)
 CBaseClient_GetNetworkIDString func_CBaseClient_GetNetworkIDString;
 const char* Detours::Function::GetNetworkIDString(IClient* cl)
 {
-	return func_CBaseClient_GetNetworkIDString(cl);
+	return func_CBaseClient_GetNetworkIDString(cl); // NOTE for the future: The VTable of IClient seems to be broken or CBaseClient breaks it.  
 }
 
 bool hook_CBaseClient_SetSignonState(IClient* cl, int state, int spawncount)
