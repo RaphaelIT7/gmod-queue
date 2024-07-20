@@ -19,3 +19,9 @@ number state - The SignOnState we want to set.
 
 returns:  
 bool success - `true` If the SignOnState was successfully set  
+
+#### string PlayerQueue.GetSteamID( number slot )  
+number slot - The slot that `PlayerQueue:OnSetSignonState` provided.  
+
+returns:  
+string steamid - The steamid of that client. or nil on failure.
