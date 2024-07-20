@@ -109,7 +109,7 @@ LUA_FUNCTION_STATIC(GetSteamID64)
 	IClient* cl = GetClient(playerSlot);
 	if ( cl )
 	{
-		LUA->PushString(cl->GetNetworkIDString()); // ToDo: Make a function that returns the steamid
+		LUA->PushString(Detours::Function::GetNetworkIDString(cl)); // ToDo: Make a function that returns the steamid
 	} else {
 		LUA->PushNil();
 	}

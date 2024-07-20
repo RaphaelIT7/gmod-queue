@@ -17,6 +17,9 @@ const Symbol CBaseClient_SendServerInfoSym = Symbol::FromName("_ZN11CBaseClient1
 typedef bool (*CBaseClient_SetSignonState)(void* client, int state, int spawncount);
 const Symbol CBaseClient_SetSignonStateSym = Symbol::FromName("_ZN11CBaseClient14SetSignonStateEii");
 
+typedef const char* (*CBaseClient_GetNetworkIDString)(void* client);
+const Symbol CBaseClient_GetNetworkIDStringSym = Symbol::FromName("_ZNK11CBaseClient18GetNetworkIDStringEv");
+
 typedef void (*CBaseServer_SendPendingServerInfo)(void* srv);
 const Symbol CBaseServer_SendPendingServerInfoSym = Symbol::FromName("_ZN11CBaseServer21SendPendingServerInfoEv");
 
@@ -35,6 +38,7 @@ namespace Detours
 	namespace Function
 	{
 		extern bool SetSignOnState(IClient* cl, int state, int spawncount);
+		extern const char* GetNetworkIDString(IClient* cl);
 	}
 
 	extern void Init();

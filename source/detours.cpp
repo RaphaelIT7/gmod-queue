@@ -22,6 +22,12 @@ bool Detours::Function::SetSignOnState(IClient* cl, int state, int spawncount)
 	return detour_CBaseClient_SetSignonState.GetTrampoline<CBaseClient_SetSignonState>()(cl, state, spawncount);
 }
 
+CBaseClient_GetNetworkIDString func_CBaseClient_GetNetworkIDString;
+const char* Detours::Function::GetNetworkIDString(IClient* cl)
+{
+	return func_CBaseClient_GetNetworkIDString(cl);
+}
+
 bool hook_CBaseClient_SetSignonState(IClient* cl, int state, int spawncount)
 {
 	if (Lua::Hooks::OnSetSignonState(cl, state, spawncount))
@@ -102,6 +108,9 @@ void Detours::Init()
 
 	// Function loader
 	Msg("	--- Function loader ---\n");
+
+	func_CBaseClient_GetNetworkIDString = (CBaseClient_GetNetworkIDString)symfinder.Resolve(engine_loader.GetModule(), CBaseClient_GetNetworkIDStringSym.name.c_str(), CBaseClient_GetNetworkIDStringSym.length);
+	CheckFunction(func_CBaseClient_GetNetworkIDString, "CBaseClient::GetNetworkIDString");
 
 	Msg("	--- Finished loading functions ---\n");
 }
