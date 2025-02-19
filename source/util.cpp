@@ -1,47 +1,49 @@
 #include "util.h"
 #include <string>
-#include "edict.h"
+#include "GarrysMod/InterfacePointers.hpp"
+#include "sourcesdk/baseclient.h"
+#include "detours.h"
 
+// Try not to use it. We want to move away from it.
+// Additionaly, we will add checks in many functions.
 GarrysMod::Lua::ILuaInterface* g_Lua;
-IVEngineServer* engine;
 
-void Start_Table() {
-	g_Lua->PushSpecial(SPECIAL_GLOB);
-	g_Lua->CreateTable();
+IServer* Util::server;
+CBaseClient* Util::GetClientByUserID(int userid)
+{
+	for (int i = 0; i < Util::server->GetClientCount(); i++)
+	{
+		IClient* pClient = Util::server->GetClient(i);
+		if ( pClient && pClient->GetUserID() == userid)
+			return (CBaseClient*)pClient;
+	}
+
+	return NULL;
 }
 
-void Add_Func(CFunc Func, const char* Name) {
-	g_Lua->PushCFunction(Func);
-	g_Lua->SetField(-2, Name);
+CBaseClient* Util::GetClientByIndex(int index)
+{
+	if (server->GetClientCount() <= index || index < 0)
+		return NULL;
+
+	return (CBaseClient*)server->GetClient(index);
 }
 
-void Add_Func(CFunc Func, std::string Name) {
-	g_Lua->PushCFunction(Func);
-	g_Lua->SetField(-2, Name.c_str());
+std::vector<CBaseClient*> Util::GetClients()
+{
+	std::vector<CBaseClient*> pClients;
+
+	for (int i = 0; i < server->GetClientCount(); i++)
+	{
+		IClient* pClient = server->GetClient(i);
+		pClients.push_back((CBaseClient*)pClient);
+	}
+
+	return pClients;
 }
 
-void Finish_Table(const char* Name) {
-	g_Lua->SetField(-2, Name);
-	g_Lua->Pop();
-}
-
-void Finish_Table(std::string Name) {
-	g_Lua->SetField(-2, Name.c_str());
-	g_Lua->Pop();
-}
-
-// should never be used outside of main thread!!! what happends: memory access violation
-void LuaPrint(const char* Text) {
-	g_Lua->PushSpecial(SPECIAL_GLOB);
-	g_Lua->GetField(-1, "print");
-	g_Lua->PushString(Text);
-	g_Lua->Call(1, 0);
-}
-
-// should never be used outside of main thread!!! what happends: memory access violation
-void LuaPrint(std::string Text) {
-	g_Lua->PushSpecial(SPECIAL_GLOB);
-	g_Lua->GetField(-1, "print");
-	g_Lua->PushString(Text.c_str());
-	g_Lua->Call(1, 0);
+void Util::AddDetour()
+{
+	server = InterfacePointers::Server();
+	Detour::CheckValue("get class", "IServer", server != NULL);
 }

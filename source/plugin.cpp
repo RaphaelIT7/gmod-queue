@@ -1,13 +1,10 @@
 #include <GarrysMod/FactoryLoader.hpp>
-#include "filesystem.h"
 #include "plugin.h"
 #include "lua.h"
 #include <tier1.h>
 #include <tier2/tier2.h>
-#include <GarrysMod/Symbols.hpp>
-
-#define DEDICATED
-#include "vstdlib/jobthread.h"
+#include "detours.h"
+#include "queue.h"
 
 // The plugin is a static singleton that is exported as an interface
 CServerPlugin g_EmtpyServerPlugin;
@@ -36,11 +33,9 @@ bool CServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn g
 	 
 	ConnectTier1Libraries(&interfaceFactory, 1);
 	ConnectTier2Libraries(&interfaceFactory, 1);
-	ConnectTier3Libraries(&interfaceFactory, 1);
 
-	engine = (IVEngineServer*)(&interfaceFactory)[0]( INTERFACEVERSION_VENGINESERVER, NULL );
-
-	Detours::Init();
+	Util::AddDetour();
+	Queue::Init();
 
 	Msg("--- Queue Plugin finished loading ---\n");
 
@@ -52,7 +47,8 @@ bool CServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn g
 //---------------------------------------------------------------------------------
 void CServerPlugin::Unload(void)
 {
-	Detours::Shutdown();
+	Detour::Remove(0);
+	Detour::ReportLeak();
 }
 
 //---------------------------------------------------------------------------------
@@ -74,7 +70,7 @@ void CServerPlugin::UnPause(void)
 //---------------------------------------------------------------------------------
 const char * CServerPlugin::GetPluginDescription(void)
 {
-	return "Queue Serverplugin V0.1";
+	return "Queue Serverplugin V0.2";
 }
 
 //---------------------------------------------------------------------------------
@@ -127,7 +123,6 @@ void CServerPlugin::ServerActivate(edict_t *pEdictList, int edictCount, int clie
 //---------------------------------------------------------------------------------
 void CServerPlugin::GameFrame(bool simulating)
 {
-	Detours::Think();
 }
 
 //---------------------------------------------------------------------------------

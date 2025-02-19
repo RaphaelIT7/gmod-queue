@@ -4,10 +4,6 @@
 #include "util.h"
 
 namespace Lua {
-	namespace Hooks {
-		extern bool OnSetSignonState(IClient* cl, int state, int spawncount);
-	}
-
 	extern bool PushHook(const char* pName);
 	extern void Init(GarrysMod::Lua::ILuaBase* LUA);
 	extern void ServerInit();

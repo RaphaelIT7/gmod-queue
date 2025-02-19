@@ -7,7 +7,7 @@ jobs:
     uses: RaphaelIT7/gmod-common-module-base/.github/workflows/compile.yml@workflow
     with:
       PROJECT_NAME: "queue"
-      BUILD_64x: "false"
+      BUILD_64x: "true"
       REALM: "sv"
       SOURCESDK_MINIMAL: "RaphaelIT7/sourcesdk-gmod"
       SOURCESDK_MINIMAL_BRANCH: "main"

@@ -38,11 +38,13 @@ CreateWorkspace({name = "queue", abi_compatible = false})
         IncludeScanning()
 
         files({
-            [[garrysmod_common\sourcesdk-minimal\public\tier2\tier2.cpp]],
-        })
+			[[source/sourcesdk/*.h]],
+			[[source/sourcesdk/*.cpp]],
+		})
 
-        filter("system:windows")
-            files({"source/win32/*.cpp", "source/win32/*.hpp"})
+		includedirs({
+			[[source/sourcesdk/]],
+		})
 
         filter("system:linux")
             targetextension(".so")
@@ -52,6 +54,3 @@ CreateWorkspace({name = "queue", abi_compatible = false})
                     "tier0",
                     "pthread"
                 }
-
-        filter("system:linux or macosx")
-            files({"source/posix/*.cpp", "source/posix/*.hpp"})
