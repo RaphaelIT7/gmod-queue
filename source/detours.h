@@ -49,7 +49,7 @@ namespace Detour
 	}
 
 	extern void* GetFunction(void* module, Symbol symbol);
-	extern void Create(Detouring::Hook* hook, const char* name, void* module, Symbol symbol, void* func, unsigned int category);
+	extern void Create(Detouring::Hook* hook, const char* name, void* module, Symbol symbol, void* func, unsigned int category = 0);
 	extern void Remove(unsigned int category); // 0 = All
 	extern void ReportLeak();
 	extern unsigned int g_pCurrentCategory;
@@ -121,7 +121,7 @@ namespace Detour
 		return GetFunction(module, symbols[DETOUR_SYMBOL_ID]);
 	}
 
-	inline void Create(Detouring::Hook* hook, const char* name, void* module, std::vector<Symbol> symbols, void* func, unsigned int category)
+	inline void Create(Detouring::Hook* hook, const char* name, void* module, std::vector<Symbol> symbols, void* func, unsigned int category = 0)
 	{
 #if DETOUR_SYMBOL_ID != 0
 		if ((symbols.size()-1) < DETOUR_SYMBOL_ID)

@@ -4,14 +4,6 @@
 
 class SVC_ServerInfo;
 
-/*
- * The symbols will have this order:
- * 0 - Linux 32x
- * 1 - Linux 64x
- * 2 - Windows 32x
- * 3 - Windows 64x
- */
-
 #if defined SYSTEM_WINDOWS
 #if defined ARCHITECTURE_X86_64
 #define GMCOMMON_CALLING_CONVENTION __fastcall
@@ -22,14 +14,13 @@ class SVC_ServerInfo;
 #define GMCOMMON_CALLING_CONVENTION
 #endif
 
- /*
-  * I need to figure out how to hook into shit without breaking it on windows.
-  * Currently every single hook seems to break gmod and every call to a hook seems broken.
-  * It's probably some shit with calling convention or so but I have no fking Idea how to solve that :<
-  * If someone knows how I could fix this, please let me know.
-  * 
-  * Update: First, class hooks, don't have "this"/the first argument meaning you require a ClassProxy
-  */
+/*
+ * The symbols will have this order:
+ * 0 - Linux 32x
+ * 1 - Linux 64x
+ * 2 - Windows 32x
+ * 3 - Windows 64x
+ */
 
 namespace Symbols
 {

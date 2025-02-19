@@ -11,7 +11,7 @@ GarrysMod::Lua::ILuaInterface* g_Lua;
 IServer* Util::server;
 CBaseClient* Util::GetClientByUserID(int userid)
 {
-	for (int i = 0; i < Util::server->GetClientCount(); i++)
+	for (int i = 0; i < Util::server->GetClientCount(); ++i)
 	{
 		IClient* pClient = Util::server->GetClient(i);
 		if ( pClient && pClient->GetUserID() == userid)
@@ -33,7 +33,7 @@ std::vector<CBaseClient*> Util::GetClients()
 {
 	std::vector<CBaseClient*> pClients;
 
-	for (int i = 0; i < server->GetClientCount(); i++)
+	for (int i = 0; i < server->GetClientCount(); ++i)
 	{
 		IClient* pClient = server->GetClient(i);
 		pClients.push_back((CBaseClient*)pClient);

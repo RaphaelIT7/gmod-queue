@@ -1,6 +1,6 @@
 -- Defines which version of the project generator to use, by default
 -- (can be overriden by the environment variable PROJECT_GENERATOR_VERSION)
-PROJECT_GENERATOR_VERSION = 2
+PROJECT_GENERATOR_VERSION = 3
 
 newoption({
     trigger = "gmcommon",
@@ -12,7 +12,7 @@ local gmcommon = assert(_OPTIONS.gmcommon or os.getenv("GARRYSMOD_COMMON"),
     "you didn't provide a path to your garrysmod_common (https://github.com/danielga/garrysmod_common) directory")
 include(gmcommon)
 
-CreateWorkspace({name = "queue", abi_compatible = false})
+CreateWorkspace({name = "playerqueue", abi_compatible = false})
     -- Serverside module (gmsv prefix)
     -- Can define "source_path", where the source files are located
     -- Can define "manual_files", which allows you to manually add files to the project,
@@ -28,7 +28,7 @@ CreateWorkspace({name = "queue", abi_compatible = false})
         IncludeSDKTier0()
         IncludeSDKTier1()
         --IncludeSDKTier2()
-        IncludeSDKTier3()
+        --IncludeSDKTier3()
         --IncludeSDKMathlib()
         --IncludeSDKRaytrace()
         --IncludeSDKBitmap()
@@ -36,6 +36,8 @@ CreateWorkspace({name = "queue", abi_compatible = false})
         --IncludeSteamAPI()
         IncludeDetouring()
         IncludeScanning()
+
+        defines("PROJECT_NAME=\"" .. workspace().name .. "\"")
 
         files({
 			[[source/sourcesdk/*.h]],

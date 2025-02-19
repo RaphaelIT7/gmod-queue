@@ -1,6 +1,6 @@
 #pragma once
 
-#include <GarrysMod/Lua/LuaInterface.h>
+#include <LuaInterface.h>
 #include "Platform.hpp"
 #include "vprof.h"
 #include <unordered_map>
@@ -184,49 +184,6 @@ className* Get_##className(int iStackPos, bool bError) \
 	return (className*)pLuaData->GetData(); \
 }
 
-#define SpecialGet_LuaClass( className, luaType, luaType2, strName ) \
-static std::string invalidType_##className = MakeString("Tried to use something that wasn't a ", strName, "!"); \
-static std::string triedNull_##className = MakeString("Tried to use a NULL ", strName, "!"); \
-LuaUserData* Get_##className##_Data(int iStackPos, bool bError) \
-{ \
-	int iType = g_Lua->GetType(iStackPos); \
-	if (iType != luaType && iType != luaType2) \
-	{ \
-		if (bError) \
-			g_Lua->ThrowError(invalidType_##className.c_str()); \
-\
-		return NULL; \
-	} \
-\
-	if (iType == luaType) \
-	{ \
-		LuaUserData* pVar = g_Lua->GetUserType<LuaUserData>(iStackPos, luaType); \
-		if (pVar) \
-			return pVar; \
-	} \
-\
-	if (iType == luaType2) \
-	{ \
-		LuaUserData* pVar = g_Lua->GetUserType<LuaUserData>(iStackPos, luaType2); \
-		if (pVar) \
-			return pVar; \
-	} \
- \
-	if (bError) \
-		g_Lua->ThrowError(triedNull_##className.c_str()); \
-\
-	return NULL; \
-} \
-\
-className* Get_##className(int iStackPos, bool bError) \
-{ \
-	LuaUserData* pLuaData = Get_##className##_Data(iStackPos, bError); \
-	if (!pLuaData) \
-		return NULL; \
- \
-	return (className*)pLuaData->GetData(); \
-}
-
 #define Push_LuaClass( className, luaType ) \
 void Push_##className(className* var) \
 { \
@@ -291,7 +248,7 @@ LUA_FUNCTION_STATIC(className ## __index) \
 		return 1; \
 \
 	LUA->Pop(1); \
-	Util::ReferencePush(LUA, Get_##className##_Data(1, true)->iTableReference); \
+	LUA->ReferencePush(Get_##className##_Data(1, true)->iTableReference); \
 	if (!LUA->FindObjectOnTable(-1, 2)) \
 		LUA->PushNil(); \
 \
@@ -317,7 +274,7 @@ LUA_FUNCTION_STATIC(className ## __gc) \
 #define Default__newindex(className) \
 LUA_FUNCTION_STATIC(className ## __newindex) \
 { \
-Util::ReferencePush(LUA, Get_##className##_Data(1, true)->iTableReference); \
+	LUA->ReferencePush(Get_##className##_Data(1, true)->iTableReference); \
 	LUA->Push(2); \
 	LUA->Push(3); \
 	LUA->RawSet(-3); \
@@ -329,6 +286,6 @@ Util::ReferencePush(LUA, Get_##className##_Data(1, true)->iTableReference); \
 #define Default__GetTable(className) \
 LUA_FUNCTION_STATIC(className ## _GetTable) \
 { \
-	Util::ReferencePush(LUA, Get_##className##_Data(1, true)->iTableReference); \
+	LUA->ReferencePush(Get_##className##_Data(1, true)->iTableReference); \
 	return 1; \
 }

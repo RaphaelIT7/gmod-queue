@@ -1,8 +1,6 @@
 #include <GarrysMod/FactoryLoader.hpp>
 #include "plugin.h"
 #include "lua.h"
-#include <tier1.h>
-#include <tier2/tier2.h>
 #include "detours.h"
 #include "queue.h"
 
@@ -29,15 +27,12 @@ CServerPlugin::~CServerPlugin()
 //---------------------------------------------------------------------------------
 bool CServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServerFactory)
 {
-	Msg("--- Queue Plugin loading ---\n");
-	 
-	ConnectTier1Libraries(&interfaceFactory, 1);
-	ConnectTier2Libraries(&interfaceFactory, 1);
+	Msg("--- " PROJECT_NAME " Plugin loading ---\n");
 
 	Util::AddDetour();
 	Queue::Init();
 
-	Msg("--- Queue Plugin finished loading ---\n");
+	Msg("--- " PROJECT_NAME " Plugin finished loading ---\n");
 
 	return true;
 }
@@ -70,7 +65,7 @@ void CServerPlugin::UnPause(void)
 //---------------------------------------------------------------------------------
 const char * CServerPlugin::GetPluginDescription(void)
 {
-	return "Queue Serverplugin V0.2";
+	return PROJECT_NAME " Serverplugin V0.2";
 }
 
 //---------------------------------------------------------------------------------
@@ -88,7 +83,7 @@ bool CServerPlugin::LuaInit()
 {
 	LUA = Lua::GetRealm(GarrysMod::Lua::State::SERVER);
 	if (LUA == nullptr) {
-		Msg("Failed to initialize Server\n");
+		Msg(PROJECT_NAME ": Failed to initialize Server\n");
 		return false;
 	}
 
