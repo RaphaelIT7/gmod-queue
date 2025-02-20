@@ -37,7 +37,7 @@ CreateWorkspace({name = "playerqueue", abi_compatible = false})
         IncludeDetouring()
         IncludeScanning()
 
-        defines("PROJECT_NAME=\"" .. workspace().name .. "\"")
+        defines("PROJECT_NAME=\"playerqueue\"")
 
         files({
 			[[source/sourcesdk/*.h]],

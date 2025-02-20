@@ -139,8 +139,8 @@ LUA_FUNCTION_STATIC(CBaseClient_IsFakeClient)
 LUA_FUNCTION_STATIC(CBaseClient_SetSignonState)
 {
 	CBaseClient* pClient = Get_CBaseClient(1, true);
-	int iSignOnState = LUA->CheckNumber(2);
-	int iSpawnCount = LUA->GetNumber(3);
+	int iSignOnState = (int)LUA->CheckNumber(2);
+	int iSpawnCount = (int)LUA->GetNumber(3);
 	bool bRawSet = LUA->GetBool(4);
 
 	if (!pClient)
@@ -219,7 +219,6 @@ LUA_FUNCTION_STATIC(gameserver_GetAll)
 		if (!Util::server || !Util::server->IsActive())
 			return 1;
 
-		int iTableIndex = 0;
 		int idx = 0;
 		for (int iClientIndex=0; iClientIndex<Util::server->GetClientCount(); ++iClientIndex)
 		{
