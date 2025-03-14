@@ -109,7 +109,7 @@ playerQueue = playerQueue or {
 	count = 0
 }
 
-hook.Add("HolyLib:OnSetSignonState", "Example", function(cl, state, c)
+hook.Add("PlayerQueue:OnSetSignonState", "Example", function(cl, state, c)
 	print(cl, state, c)
 
 	local fullServer = #player.GetAll() >= 128 -- Can't exceed 128 players.
@@ -124,7 +124,7 @@ hook.Add("HolyLib:OnSetSignonState", "Example", function(cl, state, c)
 	end
 end)
 
-hook.Add("HolyLib:OnClientDisconnect", "Example", function(client)
+hook.Add("PlayerQueue:OnClientDisconnect", "Example", function(client)
 	timer.Simple(0, function() -- Just to be sure that the client was really disconnected.
 		if playerQueue.count <= 0 then return end
 
@@ -142,7 +142,7 @@ hook.Add("HolyLib:OnClientDisconnect", "Example", function(client)
 	end)
 end)
 
-hook.Add("HolyLib:OnPlayerChangedSlot", "Example", function(oldPlayerSlot, newPlayerSlot)
+hook.Add("PlayerQueue:OnPlayerChangedSlot", "Example", function(oldPlayerSlot, newPlayerSlot)
 	print("Client was moved from slot " .. oldPlayerSlot .. " to slot " .. newPlayerSlot)
 end)
 ```
