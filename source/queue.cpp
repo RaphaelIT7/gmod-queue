@@ -452,7 +452,6 @@ void hook_CGameClient_SpawnPlayer(CGameClient* client)
 	//detour_CGameClient_SpawnPlayer.GetTrampoline<Symbols::CGameClient_SpawnPlayer>()(pClient);
 }
 
-// Called by SourceTV from CSteam3Server::NotifyClientDisconnect
 void GameServer_OnClientDisconnect(CBaseClient* pClient)
 {
 	if (pClient->GetServer() != Util::server)
@@ -469,6 +468,13 @@ void GameServer_OnClientDisconnect(CBaseClient* pClient)
 	{
 		Delete_CBaseClient(it->first);
 	}
+}
+
+static Detouring::Hook detour_CSteam3Server_NotifyClientDisconnect;
+static void hook_CSteam3Server_NotifyClientDisconnect(void* pServer, CBaseClient* pClient)
+{
+	GameServer_OnClientDisconnect(pClient);
+	detour_CSteam3Server_NotifyClientDisconnect.GetTrampoline<Symbols::CSteam3Server_NotifyClientDisconnect>()(pServer, pClient);
 }
 
 void Queue::Init()
@@ -501,6 +507,12 @@ void Queue::Init()
 		&detour_CGameClient_SpawnPlayer, "CGameClient::SpawnPlayer",
 		engine_loader.GetModule(), Symbols::CGameClient_SpawnPlayerSym,
 		(void*)hook_CGameClient_SpawnPlayer
+	);
+
+	Detour::Create(
+		&detour_CSteam3Server_NotifyClientDisconnect, "CSteam3Server::NotifyClientDisconnect",
+		engine_loader.GetModule(), Symbols::CSteam3Server_NotifyClientDisconnectSym,
+		(void*)hook_CSteam3Server_NotifyClientDisconnect
 	);
 
 	SourceSDK::FactoryLoader server_loader("server");

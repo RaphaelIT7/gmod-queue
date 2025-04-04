@@ -24,6 +24,8 @@ class SVC_ServerInfo;
 
 namespace Symbols
 {
+	// The ENTIRE SignOnState stuff seems to be different on 64x....
+	// Idk if it's even possible to implement this on 64x
 	typedef bool (*CBaseClient_SetSignonState)(void* client, int state, int spawncount);
 	const std::vector<Symbol> CBaseClient_SetSignonStateSym = {
 		Symbol::FromName("_ZN11CBaseClient14SetSignonStateEii"),
@@ -42,5 +44,11 @@ namespace Symbols
 	typedef void (*CGameClient_SpawnPlayer)(void* client);
 	const std::vector<Symbol> CGameClient_SpawnPlayerSym = {
 		Symbol::FromName("_ZN11CGameClient11SpawnPlayerEv"),
+	};
+
+	typedef void (GMCOMMON_CALLING_CONVENTION* CSteam3Server_NotifyClientDisconnect)(void* server, CBaseClient* client);
+	const std::vector<Symbol> CSteam3Server_NotifyClientDisconnectSym = { // 64x = Search for "S3" and then go through every function upwards till you find one that somewhat matches the ASM of the 32x version.
+		Symbol::FromName("_ZN13CSteam3Server22NotifyClientDisconnectEP11CBaseClient"),
+		Symbol::FromSignature("\x55\x48\x89\xE5\x41\x54\x53\x48\x89\xF3\x48\x83\xEC\x20\x48\x85\xF6"), // 55 48 89 E5 41 54 53 48 89 F3 48 83 EC 20 48 85 F6
 	};
 }
